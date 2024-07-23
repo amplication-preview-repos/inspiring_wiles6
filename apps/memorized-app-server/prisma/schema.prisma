@@ -1,0 +1,39 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DB_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Card {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  prompt    String?
+  blank     String?
+  word      Word?    @relation(fields: [wordId], references: [id])
+  wordId    String?
+}
+
+model Word {
+  id         String   @id @default(cuid())
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  word       String?
+  definition String?
+  cards      Card[]
+}
+
+model User {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  firstName String?
+  lastName  String?
+  username  String   @unique
+  email     String?  @unique
+  password  String
+  roles     Json
+}
